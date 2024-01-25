@@ -1,6 +1,6 @@
 <template>
     <v-app>
-        <v-navigation-drawer v-model="drawer" mobile-breakpoint="md">
+        <v-navigation-drawer v-model="drawer" mobile-breakpoint="md" class="height-75" floating="">
                 <v-row align-content="center" justify="center">
                     <v-col cols="4">
                         <v-img src="/img/logo.png" class="app-logo-img"></v-img>
@@ -12,11 +12,11 @@
                 </v-row>
             <v-list-item class="">
                 <v-row align="center">
-                    <v-col cols="9">
+                    <v-col cols="8">
                         <v-btn size="small"
                                prepend-icon="mdi-magnify"
                                :ripple="false"
-                               variant="tonal">Search req... <span class="search-btn-k">⌘</span> <span class="search-btn-k">K</span>
+                               variant="tonal">Jump to <span class="search-btn-k ml-5">⌘</span> <span class="search-btn-k">K</span>
                             <v-dialog
                                 v-model="dialog"
                                 activator="parent"
@@ -38,50 +38,48 @@
                             </v-dialog>
                         </v-btn>
                     </v-col>
-                    <v-col cols="3">
+                    <v-col cols="2">
                         <v-btn
                             @click="toggleTheme"
                             size="x-small"
                             icon="mdi-theme-light-dark"
                             variant="plain"
+                            :ripple="false"
+                            class="mb-1"/>
+                    </v-col>
+                    <v-col cols="1">
+                        <v-btn
+                            @click="toggleTheme"
+                            size="x-small"
+                            icon="mdi-translate"
+                            variant="plain"
+                            :ripple="false"
                             class="mb-1"/>
                     </v-col>
                 </v-row>
             </v-list-item>
             <v-divider></v-divider>
-            <v-list v-model:opened="open">
-                <v-list-item @click="route_to('/')" title="What is Kickin?">
-                    <template v-slot:prepend>
-                        <v-icon icon="mdi-lightbulb-question-outline"></v-icon>
-                    </template>
-                </v-list-item>
-                <v-list-group value="Api Docs">
-                    <template v-slot:activator="{ props }">
-                        <v-list-item
-                            v-bind="props"
-                            prepend-icon="mdi-api"
-                            title="Api Docs"
-                        ></v-list-item>
-                    </template>
-                        <v-list-item @click="route_to('intro')">Getting started</v-list-item>
-                        <v-list-group value="Requests">
-                            <template v-slot:activator="{ props }">
-                                <v-list-item
-                                    v-bind="props"
-                                    title="Requests"
-                                ></v-list-item>
-                            </template>
-                            <v-list-item
-                                v-for="([title, icon], i) in cruds"
-                                :key="i"
-                                :value="title"
-                                :title="title"
-                                :prepend-icon="icon"
-                                class="list-child"
-                            ></v-list-item>
-
-                        </v-list-group>
-                </v-list-group>
+            <v-list v-model:opened="open" density="compact">
+                <span class="ml-4 text-subtitle-2">KICKIN API</span>
+                <div v-for="(item, idx) in menuItems" :key="item.id" class="">
+                    <p v-if="item.type === 'link'" @click="route_to(item.to); resetAndSetCurrent(item)"  class="link-padding text-body-2  list-item-cursor"  :class="{ current: item.current }">
+                        <v-icon size="x-small" class="mx-1">{{item.icon}}</v-icon>
+                        {{item.title}}
+                    </p>
+                    <div v-else-if="item.type==='toggle'" class="toggle-margin mr-1 text-body-2">
+                        <p @click="toggleSubMenu(item)" class="list-item-cursor" :class="{ current: item.current }">
+                            <v-icon v-if="item.opened">mdi-chevron-down</v-icon>
+                            <v-icon v-else>mdi-chevron-right</v-icon>
+                            {{item.title}}
+                        </p>
+                        <div v-if="item.opened">
+                            <p v-for="(subItem, idx) in item.subMenu" :key="subItem.id" @click="route_to(subItem); resetAndSetCurrent(subItem, item)" class="list-item-cursor sub-group-wrapper" :class="{ current: subItem.current }">
+                                <span class=" text-body-2">{{ subItem.title }}</span>
+                                <v-chip size="x-small" tonal class="mr-1 font-weight-bold" :color="subItem.color">{{ subItem.method }}</v-chip>
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </v-list>
         </v-navigation-drawer>
 
@@ -99,50 +97,45 @@
             </v-btn>
         </v-app-bar>
         <v-main>
+            <v-container class="xlg-max-w">
             <NuxtPage />
+            </v-container>
         </v-main>
-        <v-footer  elevation="5" class="d-none d-md-flex" >
-            <v-row>
-                <v-col cols="3"></v-col>
-                <v-col cols="9" align-self="center">
-                    <v-row>
-                        <v-col>
-                            <v-list>
-                                <v-list-item-title class="font-weight-black">What is Kickin?</v-list-item-title>
-                                <v-list-item ><span class="footer-list-item">About Kickin</span></v-list-item>
-                                <v-list-item ><span class="footer-list-item">Contact</span></v-list-item>
-                                <v-list-item ><span class="footer-list-item">APIs</span></v-list-item>
-                            </v-list>
-                        </v-col>
-                        <v-divider vertical></v-divider>
-                        <v-col>
-                            <v-list>
-                                <v-list-item-title class="font-weight-black">What is Kickin?</v-list-item-title>
-                                <v-list-item ><span class="footer-list-item">About Kickin</span></v-list-item>
-                                <v-list-item ><span class="footer-list-item">Contact</span></v-list-item>
-                                <v-list-item ><span class="footer-list-item">APIs</span></v-list-item>
-                            </v-list>
-                        </v-col>
-                        <v-divider vertical></v-divider>
-                        <v-col>
-                            <v-list>
-                                <v-list-item-title class="font-weight-black">What is Kickin?</v-list-item-title>
-                                <v-list-item ><span class="footer-list-item">About Kickin</span></v-list-item>
-                                <v-list-item ><span class="footer-list-item">Contact</span></v-list-item>
-                                <v-list-item ><span class="footer-list-item">APIs</span></v-list-item>
-                            </v-list>
-                        </v-col>
-                        <v-col cols="4">
-                            <v-list-item-title class="text-h5 main-title">Kickin.</v-list-item-title>
-                            <v-list-item-subtitle>kicks Data Api</v-list-item-subtitle>
-                            <v-list-item-media>
-                                <v-img src="/img/logo.png" class="app-logo-img"></v-img>
-                            </v-list-item-media>
-                            <v-list-item-action>
-                                <v-btn size="small" color="#365486" class="">Join Now</v-btn>
-                            </v-list-item-action>
-                        </v-col>
-                    </v-row>
+        <v-footer  class="d-none d-md-flex" style="z-index: 999;">
+            <v-row justify="space-between">
+                <v-col cols="1">
+                <v-spacer></v-spacer>
+                </v-col>
+                <v-col class="my-5">
+                    <v-list-item-title class="text-h5 main-title">Kickin.</v-list-item-title>
+                    <v-list-item-subtitle>kicks Data Api</v-list-item-subtitle>
+                    <v-list-item-media>
+                        <v-img src="/img/logo.png" class="app-logo-img"></v-img>
+                    </v-list-item-media>
+                    <v-list-item-action>
+                        <v-btn size="small" color="#365486" class="">Join Now</v-btn>
+                    </v-list-item-action>
+                </v-col>
+                <v-col>
+                    <v-list-item-title class="text-h6 mt-9">Kickin API</v-list-item-title>
+                    <v-list-item-subtitle class="text-body-2 list-item-cursor mt-3">Getting started</v-list-item-subtitle>
+                    <v-list-item-subtitle class="text-body-2 list-item-cursor mt-2">End Points</v-list-item-subtitle>
+                    <v-list-item-subtitle class="text-body-2 list-item-cursor mt-2">Requests</v-list-item-subtitle>
+                </v-col>
+                <v-col>
+                    <v-list-item-title class="text-h6 mt-9">Kickin API</v-list-item-title>
+                    <v-list-item-subtitle class="text-body-2 list-item-cursor mt-3">Getting started</v-list-item-subtitle>
+                    <v-list-item-subtitle class="text-body-2 list-item-cursor mt-2">End Points</v-list-item-subtitle>
+                    <v-list-item-subtitle class="text-body-2 list-item-cursor mt-2">Requests</v-list-item-subtitle>
+                </v-col>
+                <v-col>
+                    <v-list-item-title class="text-h6 mt-9">Kickin API</v-list-item-title>
+                    <v-list-item-subtitle class="text-body-2 list-item-cursor mt-3">Getting started</v-list-item-subtitle>
+                    <v-list-item-subtitle class="text-body-2 list-item-cursor mt-2">End Points</v-list-item-subtitle>
+                    <v-list-item-subtitle class="text-body-2 list-item-cursor mt-2">Requests</v-list-item-subtitle>
+                </v-col>
+                <v-col cols="1">
+                    <v-spacer></v-spacer>
                 </v-col>
             </v-row>
         </v-footer>
@@ -157,16 +150,72 @@ const theme = useTheme();
 const router = useRouter();
 const drawer = ref(null);
 const dialog = ref(false);
-const open = ref(['Users']);
-const cruds = ref(
+const menuItems = ref(
     [
-        ['Create', 'mdi-plus-outline'],
-        ['Read', 'mdi-file-outline'],
-        ['Update', 'mdi-update'],
+        {
+            id: 1,
+            title: 'Introduction',
+            type: 'link',
+            to: '/',
+            icon:'mdi-home-outline',
+            current: true
+        },
+        {
+            id: 2,
+            title: 'Getting started',
+            type: 'link',
+            to: '/intro',
+            icon:'mdi-book-open-page-variant-outline',
+            current: false
+        },
+        {
+            id: 3,
+            title: 'Authentication',
+            type: 'link',
+            to: 'auth',
+            icon:'mdi-account-key-outline',
+            current: false
+        },
+        {
+            id: 4,
+            title: 'Requests',
+            type: 'toggle',
+            opened: false,
+            current: false,
+            subMenu: [
+                {id: 's1', parentId: 4, title: 'lists', type: 'link',  method: 'GET', color: 'primary', current: false},
+                {id: 's2', parentId: 4, title: 'details', type: 'link', method: 'GET', color: 'primary', current: false},
+                {id: 's3', parentId: 4, title: 'rank', type: 'link', method: 'GET', color: 'primary', current: false},
+                {id: 's4', parentId: 4, title: 'Add to Favorite', type: 'link', method: 'POST', color: 'success', current: false},
+                {id: 's5', parentId: 4, title: 'Remove from Favorite', type: 'link', method: 'DELETE', color: 'error', current: false},
+            ]
+        }
     ]
 );
+const resetAndSetCurrent = (selectedItem, parentItem = null) => {
+    menuItems.value.forEach(item => {
+        item.current = false;
+        if (item.subMenu) {
+            item.subMenu.forEach(sub => {
+                sub.current = false;
+            });
+        }
+    });
 
-const route_to = (path) => {commonStore.route_to(path);};
+    selectedItem.current = true;
+    if (parentItem) {
+        parentItem.current = true;
+    } else if (selectedItem.subMenu && selectedItem.subMenu.length > 0) {
+        selectedItem.subMenu[0].current = true;
+    }
+};
+const toggleSubMenu = (item) => {
+    item.opened = !item.opened;
+    resetAndSetCurrent(item);
+};
+const route_to = (path) => {
+    commonStore.route_to(path);
+};
 const openDialogOnCommandK = (event) => {
     if (event.metaKey && event.key.toLowerCase() === 'k') {
         dialog.value = true
@@ -190,6 +239,10 @@ onMounted(() => {
 onUnmounted(() => {
     window.removeEventListener('keydown', openDialogOnCommandK)
 });
+
+const menuToggle = computed(() => {
+    return drawer.value ? 'mdi-close' : 'mdi-menu'
+});
 </script>
 
 <script>
@@ -199,7 +252,7 @@ export default {
 </script>
 
 <style>
-
+html { scroll-behavior: smooth; }
 .app-logo-img{
     border-radius: 150%;
     width: 50px;
@@ -219,13 +272,50 @@ export default {
     background-color: #b5b5b5;
     margin: 0 3px;
 }
-.footer-list-item{
+.list-item-cursor{
     cursor: pointer  ;
 }
-.footer-list-item:hover{
+.list-item-cursor:hover{
     color: #b5b5b5;
+
 }
 .list-child{
     padding-left: 104px !important;
 }
+@media (max-width: 600px) {
+    .xlg-max-w{
+        max-width: 80% !important;
+    }
+}
+a {
+    color: #c02828;
+}
+.height-75{
+    z-index: 1 !important;
+}
+.v-list-item-title{
+ font-size: 0.875rem !important;
+}
+.sub-group-wrapper{
+    display: grid;
+    grid-template-columns: 3.1fr 1fr;
+    padding: 1px 0 1px 1rem ;
+    margin: 4px 0.2px 4px 0.2px;
+}
+.v-chip{
+    justify-content: center !important;
+}
+.toggle-margin{
+    margin-left: 10px;
+    margin-top: 3px;
+}
+.link-padding{
+    padding-left:2px;
+    margin: 4px 0.2px 0 10px;
+}
+.current{
+    border-radius: 6px;
+    background-color: rgba(171, 167, 167, 0.11) !important;
+}
+
 </style>

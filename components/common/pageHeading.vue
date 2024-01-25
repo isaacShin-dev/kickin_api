@@ -17,22 +17,22 @@ const copyLink = async () => {
 
 <template>
     <p class="text-overline ms-1">{{ subtitle }}</p>
-    <v-row align="center" class="mb-2">
+    <v-row align="center">
         <v-col cols="auto"><h1 class="text-h1">{{ title }}</h1></v-col>
         <v-col cols="auto">
-            <v-menu>
+            <v-menu :height="50">
                 <template v-slot:activator="{ props }">
                     <v-icon size="large" v-bind="props">mdi-dots-vertical</v-icon>
                 </template>
-                <v-list>
-                    <v-list-item prepend-icon="mdi-link-variant" @click="copyLink">
+                <v-list density="compact" :lines="false">
+                    <v-list-item prepend-icon="mdi-link-variant" @click="copyLink" class="text-caption">
                         <v-list-item-title>Copy link</v-list-item-title>
                     </v-list-item>
                 </v-list>
             </v-menu>
         </v-col>
     </v-row>
-    <v-divider></v-divider>
+    <v-divider class="mb-3"></v-divider>
     <v-snackbar
         v-model="linkCopied"
         multi-line
