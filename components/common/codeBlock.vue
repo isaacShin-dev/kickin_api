@@ -6,7 +6,7 @@ import {useTheme} from "vuetify";
 const theme = useTheme();
 const htmlResult = ref('');
 const themeName = ref(theme.global.name.value)
-const props = defineProps(['code']);
+const props = defineProps([ 'code']);
 
 onMounted(() => {
     const codeBlockTheme = themeName.value === 'dark' ? 'ayu-dark' : 'catppuccin-latte'
@@ -16,7 +16,14 @@ onMounted(() => {
     }).then((html) => {
         htmlResult.value = html;
     }).then(() => {
-        document.getElementsByTagName('pre')[0].style.overflow = 'scroll'
+        let codeBlock = document.getElementsByTagName('pre')
+        for(let i = 0; i < codeBlock.length; i++){
+            codeBlock[i].style.overflow = 'scroll'
+            codeBlock[i].style.padding = '10px'
+        }
+        // document.getElementsByTagName('pre')[0].style.overflow = 'scroll'
+        // document.getElementsByTagName('pre')[0].style.padding = '10px'
+
     })
 })
 
@@ -60,5 +67,8 @@ watch(theme.global.name, (newTheme) => {
     width: 100% !important; /* pre 요소가 div의 전체 너비를 차지하도록 설정 */
     margin: 0; /* 필요한 경우 margin 제거 */
     overflow: scroll;
+}
+pre {
+    padding: 10px;
 }
 </style>

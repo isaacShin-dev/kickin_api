@@ -18,7 +18,7 @@ const copyLink = async () => {
 <template>
     <p class="text-overline ms-1">{{ subtitle }}</p>
     <v-row align="center">
-        <v-col cols="auto"><h1 class="text-h1">{{ title }}</h1></v-col>
+        <v-col cols="auto"><h1 class="text-h4 text-xl-h1">{{ title }}</h1></v-col>
         <v-col cols="auto">
             <v-menu :height="50">
                 <template v-slot:activator="{ props }">

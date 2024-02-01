@@ -1,7 +1,7 @@
 <template>
     <v-app>
-        <v-navigation-drawer v-model="drawer" mobile-breakpoint="md" class="height-75" floating="">
-                <v-row align-content="center" justify="center">
+        <v-navigation-drawer v-model="drawer" mobile-breakpoint="md" class="height-75" floating="" :scrim="false">
+                <v-row align-content="center" justify="center" >
                     <v-col cols="4">
                         <v-img src="/img/logo.png" class="app-logo-img"></v-img>
                     </v-col>
@@ -49,9 +49,8 @@
                     </v-col>
                     <v-col cols="1">
                         <v-btn
-                            @click="toggleTheme"
                             size="x-small"
-                            icon="mdi-translate"
+                            icon="mdi-login"
                             variant="plain"
                             :ripple="false"
                             class="mb-1"/>
@@ -60,22 +59,22 @@
             </v-list-item>
             <v-divider></v-divider>
             <v-list v-model:opened="open" density="compact">
-                <span class="ml-4 text-subtitle-2">KICKIN API</span>
+                <span class="ml-4 text-subtitle-2" style="border-bottom: #979595 1px solid">KICKIN. DATA API</span>
                 <div v-for="(item, idx) in menuItems" :key="item.id" class="">
-                    <p v-if="item.type === 'link'" @click="route_to(item.to); resetAndSetCurrent(item)"  class="link-padding text-body-2  list-item-cursor"  :class="{ current: item.current }">
-                        <v-icon size="x-small" class="mx-1">{{item.icon}}</v-icon>
-                        {{item.title}}
-                    </p>
+                    <p v-if="item.type === 'link'" @click="route_to(item.to); resetAndSetCurrent(item)"
+                       class="link-padding text-body-2  list-item-cursor"  :class="{ current: item.current }">
+                        <v-icon size="x-small" class="mx-1">{{item.icon}}</v-icon>{{item.title}}</p>
                     <div v-else-if="item.type==='toggle'" class="toggle-margin mr-1 text-body-2">
                         <p @click="toggleSubMenu(item)" class="list-item-cursor" :class="{ current: item.current }">
                             <v-icon v-if="item.opened">mdi-chevron-down</v-icon>
-                            <v-icon v-else>mdi-chevron-right</v-icon>
-                            {{item.title}}
-                        </p>
+                            <v-icon v-else>mdi-chevron-right</v-icon>{{item.title}}</p>
                         <div v-if="item.opened">
-                            <p v-for="(subItem, idx) in item.subMenu" :key="subItem.id" @click="route_to(subItem); resetAndSetCurrent(subItem, item)" class="list-item-cursor sub-group-wrapper" :class="{ current: subItem.current }">
+                            <p v-for="(subItem, idx) in item.subMenu" :key="subItem.id"
+                               @click="route_to(subItem); resetAndSetCurrent(subItem, item)"
+                               class="list-item-cursor sub-group-wrapper" :class="{ current: subItem.current }">
                                 <span class=" text-body-2">{{ subItem.title }}</span>
-                                <v-chip size="x-small" tonal class="mr-1 font-weight-bold" :color="subItem.color">{{ subItem.method }}</v-chip>
+                                <v-chip size="x-small" tonal class="mr-1 font-weight-bold"
+                                        :color="subItem.color">{{ subItem.method }}</v-chip>
                             </p>
                         </div>
                     </div>
@@ -83,18 +82,21 @@
             </v-list>
         </v-navigation-drawer>
 
-        <v-app-bar class=" d-flex d-md-none">
-            <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-            <v-app-bar-nav-icon><img src="/img/logo.png" style="height: 50px; border-radius: 100%"></img></v-app-bar-nav-icon>
-            <v-app-bar-title class="text-h5 main-title">Kickin.</v-app-bar-title>
-            <v-spacer></v-spacer>
-
-            <v-btn icon @click="dialog=true">
-                <v-icon>mdi-magnify</v-icon>
-            </v-btn>
-            <v-btn icon @click="toggleTheme">
-                <v-icon>mdi-theme-light-dark</v-icon>
-            </v-btn>
+        <v-app-bar floating="true" elevation="0">
+          <v-app-bar-nav-icon @click="drawer = !drawer" class="d-flex d-md-none"></v-app-bar-nav-icon>
+          <v-row align-content="start" justify="start" class="d-flex d-md-none">
+            <v-col cols="2" class="d-none d-flex-sm">
+              <v-img src="/img/logo.png" class="app-logo-img"></v-img>
+            </v-col>
+            <v-col cols="4" sm="6" align-self="center" class="d-none d-flex-sm">
+              <v-list-item-title class="text-h5 main-title">Kickin.</v-list-item-title>
+              <v-list-item-subtitle>kicks Data Api</v-list-item-subtitle>
+            </v-col>
+          </v-row>
+          <v-spacer></v-spacer>
+          <v-btn icon @click="dialog=true"><v-icon>mdi-magnify</v-icon></v-btn>
+          <v-btn icon @click="toggleTheme"><v-icon>mdi-theme-light-dark</v-icon></v-btn>
+          <v-btn icon @click="route_to('/login')"><v-icon>mdi-login</v-icon></v-btn>
         </v-app-bar>
         <v-main>
             <v-container class="xlg-max-w">
@@ -102,19 +104,14 @@
             </v-container>
         </v-main>
         <v-footer  class="d-none d-md-flex" style="z-index: 999;">
-            <v-row justify="space-between">
-                <v-col cols="1">
-                <v-spacer></v-spacer>
-                </v-col>
-                <v-col class="my-5">
-                    <v-list-item-title class="text-h5 main-title">Kickin.</v-list-item-title>
-                    <v-list-item-subtitle>kicks Data Api</v-list-item-subtitle>
-                    <v-list-item-media>
-                        <v-img src="/img/logo.png" class="app-logo-img"></v-img>
-                    </v-list-item-media>
-                    <v-list-item-action>
-                        <v-btn size="small" color="#365486" class="">Join Now</v-btn>
-                    </v-list-item-action>
+            <v-row justify="space-between" align="center" class="">
+                <v-col class="my-5" cols="3">
+                  <div align="center" justify="center">
+                    <p class="text-overline">Kickin.</p>
+                    <p class="text-overline">kicks Data Api</p>
+                    <v-img src="/img/logo.png" class="app-logo-img"></v-img>
+                    <v-btn size="small" color="#365486" class="text-button">Join Now</v-btn>
+                  </div>
                 </v-col>
                 <v-col>
                     <v-list-item-title class="text-h6 mt-9">Kickin API</v-list-item-title>
@@ -255,7 +252,7 @@ export default {
 html { scroll-behavior: smooth; }
 .app-logo-img{
     border-radius: 150%;
-    width: 50px;
+    width: 48px;
     margin:15px 15px ;
 }
 .main-title{
@@ -307,15 +304,21 @@ a {
 }
 .toggle-margin{
     margin-left: 10px;
-    margin-top: 3px;
+    margin-top: 7px;
 }
 .link-padding{
     padding-left:2px;
-    margin: 4px 0.2px 0 10px;
+    margin: 7px 0.2px 0 10px;
 }
 .current{
     border-radius: 6px;
     background-color: rgba(171, 167, 167, 0.11) !important;
+}
+.v-navigation-drawer__content{
+    z-index: 9999;
+}
+.v-container {
+    max-width: 100% !important;
 }
 
 </style>
