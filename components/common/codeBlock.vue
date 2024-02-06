@@ -6,12 +6,12 @@ import {useTheme} from "vuetify";
 const theme = useTheme();
 const htmlResult = ref('');
 const themeName = ref(theme.global.name.value)
-const props = defineProps([ 'code']);
+const props = defineProps([ 'code', 'lang']);
 
 onMounted(() => {
     const codeBlockTheme = themeName.value === 'dark' ? 'ayu-dark' : 'catppuccin-latte'
     codeToHtml(props.code, {
-        lang: 'javascript',
+        lang: props.lang,
         theme: codeBlockTheme,
     }).then((html) => {
         htmlResult.value = html;
@@ -19,11 +19,8 @@ onMounted(() => {
         let codeBlock = document.getElementsByTagName('pre')
         for(let i = 0; i < codeBlock.length; i++){
             codeBlock[i].style.overflow = 'scroll'
-            codeBlock[i].style.padding = '10px'
+            codeBlock[i].style.padding = '1.14rem'
         }
-        // document.getElementsByTagName('pre')[0].style.overflow = 'scroll'
-        // document.getElementsByTagName('pre')[0].style.padding = '10px'
-
     })
 })
 
@@ -54,6 +51,7 @@ watch(theme.global.name, (newTheme) => {
     position: relative;
     overflow: auto; /* 스크롤이 필요할 때만 나타나도록 변경 */
     width: 100%;
+
 }
 
 .btn-pos {
@@ -67,8 +65,9 @@ watch(theme.global.name, (newTheme) => {
     width: 100% !important; /* pre 요소가 div의 전체 너비를 차지하도록 설정 */
     margin: 0; /* 필요한 경우 margin 제거 */
     overflow: scroll;
+
 }
-pre {
-    padding: 10px;
+code {
+    padding: 1rem !important;
 }
 </style>

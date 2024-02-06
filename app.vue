@@ -1,7 +1,8 @@
 <template>
     <v-app>
-        <v-navigation-drawer v-model="drawer" mobile-breakpoint="md" class="height-75" floating="" :scrim="false">
-                <v-row align-content="center" justify="center" >
+        <v-navigation-drawer v-model="drawer" mobile-breakpoint="md"
+                             class="height-75" :floating="true" :scrim="false" elevation="0" >
+                <v-row align-content="center" justify="center" class="logo-responsive">
                     <v-col cols="4">
                         <v-img src="/img/logo.png" class="app-logo-img"></v-img>
                     </v-col>
@@ -58,7 +59,7 @@
                 </v-row>
             </v-list-item>
             <v-divider></v-divider>
-            <v-list v-model:opened="open" density="compact">
+            <v-list  density="compact">
                 <span class="ml-4 text-subtitle-2" style="border-bottom: #979595 1px solid">KICKIN. DATA API</span>
                 <div v-for="(item, idx) in menuItems" :key="item.id" class="">
                     <p v-if="item.type === 'link'" @click="route_to(item.to); resetAndSetCurrent(item)"
@@ -82,8 +83,8 @@
             </v-list>
         </v-navigation-drawer>
 
-        <v-app-bar floating="true" elevation="0">
-          <v-app-bar-nav-icon @click="drawer = !drawer" class="d-flex d-md-none"></v-app-bar-nav-icon>
+        <v-app-bar :floating="true" elevation="0">
+          <v-app-bar-nav-icon @click="drawer = !drawer" density="compact" :slim="true" :ripple="false" class="d-flex d-md-none"></v-app-bar-nav-icon>
           <v-row align-content="start" justify="start" class="d-flex d-md-none">
             <v-col cols="2" class="d-none d-flex-sm">
               <v-img src="/img/logo.png" class="app-logo-img"></v-img>
@@ -94,9 +95,10 @@
             </v-col>
           </v-row>
           <v-spacer></v-spacer>
-          <v-btn icon @click="dialog=true"><v-icon>mdi-magnify</v-icon></v-btn>
-          <v-btn icon @click="toggleTheme"><v-icon>mdi-theme-light-dark</v-icon></v-btn>
-          <v-btn icon @click="route_to('/login')"><v-icon>mdi-login</v-icon></v-btn>
+          <v-btn icon @click="dialog=true" size="small"><v-icon>mdi-magnify</v-icon></v-btn>
+          <v-btn icon @click="toggleTheme" size="small"><v-icon>mdi-theme-light-dark</v-icon></v-btn>
+          <v-btn v-if="!loginStatus" icon @click="route_to('/account/login')" size="small"><v-icon>mdi-login</v-icon></v-btn>
+          <v-btn icon v-else @click="route_to('/account/profile')"><v-icon>mdi-account-circle-outline</v-icon></v-btn>
         </v-app-bar>
         <v-main>
             <v-container class="xlg-max-w">
@@ -105,6 +107,9 @@
         </v-main>
         <v-footer  class="d-none d-md-flex" style="z-index: 999;">
             <v-row justify="space-between" align="center" class="">
+              <v-col cols="1" sm="2">
+                <v-spacer></v-spacer>
+              </v-col>
                 <v-col class="my-5" cols="3">
                   <div align="center" justify="center">
                     <p class="text-overline">Kickin.</p>
@@ -144,9 +149,9 @@ import { useTheme } from 'vuetify'
 
 const commonStore = useCommonStore()
 const theme = useTheme();
-const router = useRouter();
 const drawer = ref(null);
 const dialog = ref(false);
+const loginStatus = ref(false);
 const menuItems = ref(
     [
         {
@@ -240,6 +245,11 @@ onUnmounted(() => {
 const menuToggle = computed(() => {
     return drawer.value ? 'mdi-close' : 'mdi-menu'
 });
+
+onMounted(() => {
+const email = localStorage.getItem('email');
+loginStatus.value = !!email
+});
 </script>
 
 <script>
@@ -319,6 +329,11 @@ a {
 }
 .v-container {
     max-width: 100% !important;
+}
+@media (max-width: 959px) {
+.logo-responsive{
+  margin-top: 3.75rem !important;
+    }
 }
 
 </style>
