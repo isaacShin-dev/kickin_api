@@ -98,7 +98,17 @@
           <v-btn icon @click="dialog=true" size="small"><v-icon>mdi-magnify</v-icon></v-btn>
           <v-btn icon @click="toggleTheme" size="small"><v-icon>mdi-theme-light-dark</v-icon></v-btn>
           <v-btn v-if="!loginStatus" icon @click="route_to('/account/login')" size="small"><v-icon>mdi-login</v-icon></v-btn>
-          <v-btn icon v-else @click="route_to('/account/profile')"><v-icon>mdi-account-circle-outline</v-icon></v-btn>
+<!--          <v-btn icon v-else @click="route_to('/account/profile')"><v-icon>mdi-account-circle-outline</v-icon></v-btn>-->
+          <v-menu v-else>
+            <template v-slot:activator="{ props }">
+              <v-btn icon="mdi-account-circle-outline" v-bind="props"></v-btn>
+            </template>
+
+            <v-list density="compact">
+              <v-list-item @click="route_to('/account/profile')"><v-list-item-title>profile</v-list-item-title></v-list-item>
+              <v-list-item @click="logout"><v-list-item-title>logout</v-list-item-title></v-list-item>
+            </v-list>
+          </v-menu>
         </v-app-bar>
         <v-main>
             <v-container class="xlg-max-w">
@@ -194,6 +204,10 @@ const menuItems = ref(
         }
     ]
 );
+const items = [
+    { title: 'Profile' },
+    { title: 'Logout' },
+];
 const resetAndSetCurrent = (selectedItem, parentItem = null) => {
     menuItems.value.forEach(item => {
         item.current = false;
@@ -228,6 +242,15 @@ const toggleTheme = () => {
     theme.global.name.value = newTheme;
     localStorage.setItem('theme', newTheme);
     commonStore.theme = newTheme;
+};
+
+const logout = () => {
+    localStorage.removeItem('email');
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+    localStorage.removeItem('pk');
+    loginStatus.value = false;
+    commonStore.route_to('/');
 };
 onMounted(() => {
     window.addEventListener('keydown', openDialogOnCommandK)

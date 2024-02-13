@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import axios from "axios";
-
+// isaacshin92@gmail.com
 const commonStore = useCommonStore()
 const config = useRuntimeConfig();
 
@@ -25,10 +25,10 @@ const duplicateEmail = ref(false);
   }
 
 const loginWithEmail = () => {
-  emailLoading.value = true;
-  if(email.value === '' || !emailValidChk(email.value)){
-    emailLoading.value = false;
-    emailValid.value = false;
+    emailLoading.value = true;
+    if(email.value === '' || !emailValidChk(email.value)){
+      emailLoading.value = false;
+      emailValid.value = false;
     return;
   }
 
@@ -83,6 +83,7 @@ const login = () =>{
         localStorage.setItem('refresh_token', res.data.refresh_token);
         localStorage.setItem('email', email.value);
         localStorage.setItem('pk', res.data.user.pk);
+        commonStore.route_to('/account/profile');
     }).catch((err:any) => {
         console.log('err; ', err);
         emailLoading.value = false;
@@ -90,27 +91,20 @@ const login = () =>{
 }
 
 const checkCode = (code:String) => {
-  console.log("code: ", code)
-  console.log("registerKey.value: ", registerKey.value)
-  console.log("userInputKey.value: ", userInputKey.value)
 
   if(userInputKey.value === ''){
-    console.log("code is empty");
     userInputChecked.value = false;
     return;
   }else if(userInputKey.value === registerKey.value){
-    console.log("code is correct");
     commonStore.route_to('/account/register');
   }
   else{
-    console.log("code is wrong");
     userInputChecked.value = false;
     return;
   }
 }
 
 watch(() => emailResend.value, (val) => {
-  console.log("val: ", val)
   if(val){
     const interval = setInterval(() => {
       resendCount.value -= 1;
@@ -142,8 +136,9 @@ watch(() => emailResend.value, (val) => {
   <v-col cols="12" class="text-subtitle-2 pl-1 pb-0">E-mail</v-col>
   <v-text-field density="compact" placeholder="Please enter your E-mail" hide-details="true" v-model="email" class="mt-1"
                 :clearable="true" clear-icon="mdi-close-circle-outline" @input="emailValid=true" variant="solo" type="email"
-                @keyup.enter="loginWithEmail"
+                @keyup.enter="loginWithEmail" :autofocus="true"
   />
+  <v-col cols="12" v-show="duplicateEmail" class="text-subtitle-2 text-green-darken-3 text-center py-0">this email is already registered. please login. </v-col>
   <v-col cols="12" v-if="emailSent">
     <v-alert type="success" dense dismissible variant="outlined" class="mb-0">
       <span class="text-subtitle-2">We have sent a confirmation email to
@@ -170,8 +165,8 @@ watch(() => emailResend.value, (val) => {
     </v-btn>
   </v-col>
   <v-col cols="12" v-if="duplicateEmail" class="text-subtitle-2 pl-1 py-0">Password</v-col>
-  <v-text-field v-if="duplicateEmail" density="compact" placeholder="Password" hide-details="true" v-model="password"
-                type="password" @keyup.enter="login"
+  <v-text-field v-show="duplicateEmail" density="compact" placeholder="Password" hide-details="true" v-model="password"
+                type="password" @keyup.enter="login" id="pwd" :autofocus="duplicateEmail"
                 :clearable="true" clear-icon="mdi-close-circle-outline" variant="solo" class="mt-1"/>
   <v-col v-if="duplicateEmail">
     <v-btn class="mt-1 btn-flex mb-2" color="#40557C" :loading="emailLoading" @click="login">
@@ -198,6 +193,7 @@ watch(() => emailResend.value, (val) => {
     <v-btn href="#" variant="plain" :ripple="false" size="x-small" class="text-subtitle-2 px-0">Privacy Policy</v-btn> of
     <span class="font-weight-bold">Kickin.</span>
   </div>
+
 </div>
 </template>
 
