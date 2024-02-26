@@ -1,4 +1,5 @@
 <script setup lang="ts">
+const localePath = useLocalePath()
 const commonStore = useCommonStore()
 const sectionVisibility = reactive({});
 
@@ -12,6 +13,8 @@ const sectionVisibility = reactive({});
         {{ $t('page.home.section1.title') }}
       </div>
       <p class="h5 text-center">{{ $t('page.home.section1.content')}}</p>
+      <v-btn color="#40557C" width="122" :to="localePath('/introduction')">
+        {{ $t('common.start')}}</v-btn>
     </div>
     <v-img src="/img/home-banner.png" class="banner-img"/>
   </section>
@@ -33,9 +36,6 @@ const sectionVisibility = reactive({});
     </div>
     <v-img src="/img/contribute.png" class="banner-img shadow-img"/>
   </section>
-
-
-
 </template>
 
 <style scoped>
@@ -65,6 +65,14 @@ const sectionVisibility = reactive({});
   width: 50%;
   height: 100%;
   border-radius: 10px;
+}
+.start-btn{
+  position: fixed;
+  bottom: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 3rem;
 }
 
 

@@ -86,8 +86,7 @@ onUnmounted(() => {
 watch(() => useRoute().fullPath, (newPath) => {current_path.value = newPath;});
 
 watch(current_path, (to, from) => {
-  // console.log('Path changed to', to);
-  // console.log('to.substring(3)', to.substring(3));
+
   if(to === '/account/login' || to === '/account/register'){
     menuItems.value.forEach(item => {item.current = false;});
   }
@@ -171,7 +170,9 @@ watch(current_path, (to, from) => {
           <v-btn icon @click="dialog=true" size="small" class="d-none d-md-flex"><v-icon>mdi-magnify</v-icon>
           </v-btn>
           <v-btn icon @click="toggleTheme" size="small" class="d-none d-md-flex"><v-icon>mdi-theme-light-dark</v-icon></v-btn>
-          <v-btn v-if="!loginStatus" icon @click="route_to('/account/login')" size="small" class="d-none d-md-flex"><v-icon>mdi-login</v-icon></v-btn>
+            <NuxtLink v-if="!loginStatus" :to="localePath('/account/login')">
+              <v-btn  icon  size="small" class="d-none d-md-flex"><v-icon>mdi-login</v-icon></v-btn>
+            </NuxtLink>
             <v-menu v-else>
               <template v-slot:activator="{ props }">
                 <v-btn icon="mdi-account-circle-outline" v-bind="props"></v-btn>
@@ -190,10 +191,17 @@ watch(current_path, (to, from) => {
               <NuxtPage />
               </NuxtLayout>
             </v-container>
+        <v-footer :color="theme.global.name.value === 'dark' ? '#3A3A39' : '#FFFEFC'" app>
+          <div class="footer-wrapper">
+            <p class="text-caption"><span>&copy; 2021 Kickin. All rights reserved.</span></p>
+            <p><span class="text-caption">Developed by Isaac Shin</span></p>
+          </div>
+        </v-footer>
         </v-main>
     </v-app>
   </Html>
 </template>
+
 <style>
 
 .background-color-light{
@@ -290,6 +298,17 @@ html {
     font-weight: bolder !important;
     font-size: .9rem !important;
     letter-spacing: 5px !important;
+}
+.footer-wrapper{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  align-items: center;
+  justify-content: space-between;
+  justify-items: center;
+  padding: 0 2rem;
+
 }
 @media (max-width: 600px) {
     .xlg-max-w{
